@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    
+    <title>Shopping Cart</title>
+    <style>
+        /* General Reset */
+        * {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+
+a {
+  color: rgb(226, 74, 74);
+  text-decoration: none;
+  transition: 0.5s;
+}
+a:hover {
+  color: #6c5ce7;
+}
+.container {
+  width: 85%;
+  margin: 0 auto;
+  padding: 15px;
+}
+
+.btn-primary {
+  background: rgb(226, 74, 74);
+  color: #fff;
+  padding: 5px 10px;
+  font-size: 15px;
+  cursor: pointer;
+  border-radius: 5px;
+  transition: 0.5s;
+}
+.btn-primary:hover {
+  background: #6c5ce7;
+  color: #fff;
+}
+.label {
+  margin-bottom: 10px;
+  font-weight: bold;
+}
+.img-responsive {
+  width: 100%;
+}
+.img-curve {
+  border-radius: 10px;
+}
+.text-center {
+  text-align: center;
+}
+.text-left {
+  text-align: left;
+}
+.text-right {
+  text-align: right;
+}
+.text-white {
+  color: #fff;
+}
+.bold {
+  font-weight: bold;
+}
+h2 {
+  color: #2f3542;
+  font-size: 32px;
+  margin-bottom: 25px;
+}
+h3 {
+  font-size: 24px;
+}
+.heading-border {
+  height: 3px;
+  width: 70px;
+  background: rgb(226, 74, 74);
+  margin: auto;
+  margin-top: -10px;
+  margin-bottom: 15px;
+}
+.navbar {
+  margin-top: 80px;
+}
+.navbar-menu {
+  padding: 10px 0;
+  background: #fff;
+  transition: all 0.5s ease-in-out;
+}
+.site-top-nav {
+  background: #fff;
+  padding: 0;
+  box-shadow: 2px -4px 13px 0px #000;
+}
+.navbar-fixed-top {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1030;
+  box-shadow: 2px -7px 13px 0px #000;
+}
+.navbar-fixed-top .container {
+  padding: 0 15px;
+}
+.logo {
+  width: 120px;
+  float: left;
+  padding: 5px 5px;
+}
+.menu {
+  line-height: 60px;
+  position: relative;
+}
+.menu ul {
+  list-style: none;
+  width: 80%;
+  float: right;
+}
+.menu ul li {
+  display: inline;
+  padding: 10px;
+  font-weight: bold;
+}
+.menu ul li:last-of-type {
+  text-align: center;
+}
+.hvr-underline-from-center:before {
+  background: #6c5ce7;
+  height: 2px;
+  bottom: 10px;
+}
+.badge {
+  color: #fff;
+  background: #ff0000;
+  font-size: 12px;
+  padding: 2px 3px;
+  border-radius: 3px;
+}
+.shopping-cart {
+  color: #6c5ce7;
+  cursor: pointer;
+  font-size: 18px;
+}
+
+
+        main {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f9f9f9;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        main h1 {
+            font-size: 2rem;
+            color: rgb(226, 74, 74);
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        #cart-items {
+            margin-bottom: 20px;
+        }
+
+        .cart-item {
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background: #fff;
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .cart-item h4 {
+            font-size: 1.2rem;
+            margin-bottom: 5px;
+        }
+
+        .cart-item button {
+            padding: 5px 10px;
+            background: #ff6b6b;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        #cart-total h3 {
+            font-size: 1.5rem;
+            text-align: right;
+        }
+
+        #book-order-btn {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            background: #6c5ce7;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            font-size: 1rem;
+            text-align: center;
+            cursor: pointer;
+            margin-top: 20px;
+            text-decoration: none;
+        }
+
+        #book-order-btn:hover {
+            background: #4c3dbb;
+        }
+    </style>
+</head>
+<body>
+    {% include 'nav.html' %}
+
+    <main style="margin-top: 200px;">
+        <h1>Your Cart</h1>
+        <div id="cart-items"></div>
+        <div id="cart-total"></div>
+        <a id="book-order-btn" href="{{ url_for('order_food') }}">Book Order</a>
+    </main>
+    <script>
+        let cart = JSON.parse(localStorage.getItem('cart')) || [];
+
+        function renderCart() {
+            const cartItemsContainer = document.getElementById('cart-items');
+            const cartTotalContainer = document.getElementById('cart-total');
+
+            cartItemsContainer.innerHTML = '';
+            let total = 0;
+
+            if (cart.length === 0) {
+                cartItemsContainer.innerHTML = '<p>Your cart is empty!</p>';
+                cartTotalContainer.textContent = '';
+                document.getElementById('book-order-btn').style.display = 'none';
+                return;
+            }
+
+            cart.forEach((item, index) => {
+                const itemElement = document.createElement('div');
+                itemElement.className = 'cart-item';
+                itemElement.innerHTML = `
+                    <h4>${item.name}</h4>
+                    <p>Price: ₹${item.price}</p>
+                    <p>Quantity: ${item.quantity}</p>
+                    <button onclick="removeItem(${index})">Remove</button>
+                `;
+                cartItemsContainer.appendChild(itemElement);
+                total += item.price * item.quantity;
+            });
+
+            cartTotalContainer.innerHTML = `<h3>Total: ₹${total.toFixed(2)}</h3>`;
+            document.getElementById('book-order-btn').style.display = 'block';
+        }
+
+        function removeItem(index) {
+            cart.splice(index, 1);
+            localStorage.setItem('cart', JSON.stringify(cart));
+            renderCart();
+        }
+
+        renderCart();
+    </script>
+        <script src="js/script.js"></script>
+        <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+        <!-- Jquery UI -->
+        <script src="https://code.jquery.com/ui/1.13.0/jquery-ui.js"></script>
+</body>
+</html>

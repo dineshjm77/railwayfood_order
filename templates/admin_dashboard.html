@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - Order Status</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        .table {
+            width: 100%;
+            margin-top: 20px;
+        }
+
+        th, td {
+            padding: 10px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #007bff;
+            color: white;
+        }
+
+        td {
+            background-color: #f9f9f9;
+        }
+
+        .status-checkbox-container {
+            display: flex;
+            align-items: center;
+        }
+
+        .status-checkbox {
+            margin-right: 10px;
+        }
+
+        .alert {
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #28a745;
+            color: white;
+            text-align: center;
+            border-radius: 5px;
+        }
+
+        .search-box {
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container mt-5">
+        <h1>Manage Order Status</h1>
+
+        <!-- Search Box -->
+        <div class="search-box">
+            <input type="text" id="pnrSearch" class="form-control" placeholder="Search by PNR Number" />
+        </div>
+
+        <form method="POST" action="/admin/update_order_status">
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>PNR Number</th>
+                        <th>Station</th>
+                        <th>Food Category</th>
+                        <th>Payment Method</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody id="orderTable">
+                    {% for order in orders %}
+                    <tr>
+                        <td>{{ order[1] }}</td>
+                        <td>{{ order[2] }}</td>
+                        <td>{{ order[3] }}</td>
+                        <td>{{ order[4] }}</td>
+                        <td>{{ order[5] }}</td>
+                        <td>
+                            <div class="status-checkbox-container">
+                                <input type="checkbox" class="status-checkbox" data-pnr="{{ order[1] }}" data-status="Order Successful" {% if order[5] == 'Order Successful' %}checked{% endif %}> Order Successful
+                                <input type="checkbox" class="status-checkbox" data-pnr="{{ order[1] }}" data-status="Food Prepared" {% if order[5] == 'Food Prepared' %}checked{% endif %}> Food Prepared
+                                <input type="checkbox" class="status-checkbox" data-pnr="{{ order[1] }}" data-status="Food Collected at Next Station"> Food Collected
+                                <input type="checkbox" class="status-checkbox" data-pnr="{{ order[1] }}" data-status="Food Collected" {% if order[5] == 'Food Collected' %}checked{% endif %}> Food Collected
+                                
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+
+            <div class="alert" id="statusAlert" style="display: none;">
+                The food status has been updated successfully!
+            </div>
+        </form>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            // Handle search functionality for PNR
+            $("#pnrSearch").on("input", function () {
+                const searchTerm = $(this).val().toLowerCase();
+                $("#orderTable tr").each(function () {
+                    const pnr = $(this).find("td:first").text().toLowerCase();
+                    if (pnr.indexOf(searchTerm) !== -1) {
+                        $(this).show();
+                    } else {
+                        $(this).hide();
+                    }
+                });
+            });
+
+            // Handle status checkbox change
+            $(".status-checkbox").on("change", function () {
+                const pnr = $(this).data("pnr");
+                const status = $(this).data("status");
+                const isChecked = $(this).is(":checked");
+
+                if (isChecked) {
+                    // Send AJAX request to update status
+                    $.ajax({
+                        url: "/admin/update_status/" + pnr,
+                        type: "POST",
+                        data: { status: status },
+                        success: function () {
+                            $("#statusAlert").fadeIn().delay(3000).fadeOut();
+                        },
+                        error: function () {
+                            alert("Failed to update the status. Please try again.");
+                        },
+                    });
+                } else {
+                    // Handle the case when unchecking status
+                    $.ajax({
+                        url: "/admin/update_status/" + pnr,
+                        type: "POST",
+                        data: { status: "" }, // Remove status if unchecked
+                        success: function () {
+                            $("#statusAlert").fadeIn().delay(3000).fadeOut();
+                        },
+                        error: function () {
+                            alert("Failed to update the status. Please try again.");
+                        },
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - Order Status</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        .table {
+            width: 100%;
+            margin-top: 20px;
+        }
+
+        th, td {
+            padding: 10px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #00ff62;
+            color: white;
+        }
+
+        td {
+            background-color: #f9f9f9;
+        }
+
+        .alert {
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #28a745;
+            color: white;
+            text-align: center;
+            border-radius: 5px;
+        }
+
+        .search-box {
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container mt-5">
+        <h1>Manage Order Status</h1>
+
+        <!-- Search Box -->
+        <div class="search-box">
+            <div class="input-group">
+                <input type="text" id="pnrSearch" class="form-control" placeholder="Search by PNR Number" />
+                <div class="input-group-append">
+                    <button id="searchButton" class="btn btn-primary">Search</button>
+                </div>
+            </div>
+        </div>
+
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>PNR Number</th>
+                    <th>Station</th>
+                    <th>Food Category</th>
+                    <th>Payment Method</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody id="orderTable">
+                {% if orders %}
+                    {% for order in orders %}
+                    <tr class="order-row" style="display: none;"> <!-- Initially hide rows -->
+                        <td>{{ order[1] }}</td>
+                        <td>{{ order[2] }}</td>
+                        <td>{{ order[3] }}</td>
+                        <td>{{ order[4] }}</td>
+                        <td>{{ order[5] }}</td>
+                    </tr>
+                    {% endfor %}
+                {% else %}
+                    <tr>
+                        <td colspan="5" class="text-center">No orders found with the provided PNR number.</td>
+                    </tr>
+                {% endif %}
+            </tbody>
+        </table>
+
+        <div class="alert" id="statusAlert" style="display: none;">
+            The food has been successfully delivered!
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            // Search functionality triggered by button click
+            $("#searchButton").on("click", function () {
+                const searchTerm = $("#pnrSearch").val().trim().toLowerCase();
+
+                // Hide all rows initially
+                $(".order-row").hide();
+
+                // Clear previous "No orders found" message
+                $("#orderTable").find(".no-data").remove();
+
+                // If search term is empty, show message
+                if (searchTerm === "") {
+                    $("#orderTable").append(`
+                        <tr class="no-data">
+                            <td colspan="5" class="text-center">Please enter a PNR number.</td>
+                        </tr>
+                    `);
+                    return;
+                }
+
+                // Search and display rows that match the PNR
+                let found = false;
+                $(".order-row").each(function () {
+                    const pnr = $(this).find("td:first").text().trim().toLowerCase();
+                    if (pnr === searchTerm) {
+                        $(this).show();
+                        found = true;
+                    }
+                });
+
+                // If no rows match, show "No orders found" message
+                if (!found) {
+                    $("#orderTable").append(`
+                        <tr class="no-data">
+                            <td colspan="5" class="text-center">No orders found with the provided PNR number.</td>
+                        </tr>
+                    `);
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>

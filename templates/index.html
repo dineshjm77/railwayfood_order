@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FOOD FACTORY</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/fontawesome.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+</head>
+<style>
+    .logo {
+        display: flex;
+        align-items: center; /* Align image and text vertically */
+    }
+
+    .logo img {
+        max-height: 50px; /* Adjust as needed */
+        margin-right: 10px; /* Add spacing between image and text */
+    }
+
+    .logo-text {
+        font-size: 24px; /* Adjust font size */
+        font-weight: bold;
+        color: #e84f3f; /* Change to desired text color */
+    }
+</style>
+<body>
+    {% include 'nav.html' %}
+
+    <!-- Flash Message Section -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <div class="container mt-3">
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    {% endwith %}
+
+    <section class="food-search text-center">
+       
+    </section>
+
+    <section class="categories">
+        <div class="container">
+            <h2 class="text-center">Railways - Order food from favourite restaurants</h2>
+            <div class="heading-border"></div>
+
+            <div class="grid-3">
+                <a href="#">
+                    <div class="float-container">
+                        <img src="{{ url_for('static', filename='images/veg2.jpg') }}" class="img-responsive" alt="">
+                        <h3 class="float-text text-white">Veg Foods</h3>
+                    </div>
+                </a>
+                <a href="#">
+                    <div class="float-container">
+                        <img src="{{ url_for('static', filename='images/nonveg.jpg') }}" class="img-responsive" alt="">
+                        <h3 class="float-text text-white">Non-Veg Food</h3>
+                    </div>
+                </a>
+                <a href="#">
+                    <div class="float-container">
+                        <img src="{{ url_for('static', filename='images/p1.jpg') }}" class="img-responsive" alt="">
+                        <h3 class="float-text text-white">Snacks</h3>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <section class="food-menu">
+        <div class="container">
+            <h2 class="text-center">Food Menu</h2>
+            <div class="heading-border"></div>
+            <div class="grid-2">
+                {% for food in foods %}
+                <div class="food-menu-box">
+                    <form action="{{ url_for('add_to_cart') }}" method="POST">
+                        <div class="food-menu-img">
+                            <img src="{{ url_for('static', filename='images/' + food.image) }}" alt="" class="img-responsive img-curve">
+                        </div>
+                        <div class="food-menu-desc">
+                            <h4>{{ food.name }}</h4>
+                            <p class="food-price">₹{{ food.price }}</p>
+                            <p class="food-details">{{ food.description }}</p>
+                            <input type="number" name="quantity" value="1" min="1">
+                            <input type="submit" class="btn-primary" value="Add To Cart">
+                        </div>
+                    </form>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        <p class="text-center">
+            <a href="{{ url_for('order_food') }}" class="btn-primary">See All Foods</a>
+        </p>
+    </section>
+
+    <div class="footer">
+        <div class="container">
+            <p class="text-center">Copyright &copy; 2024 - Food Factory.com</p>
+        </div>
+    </div>
+    <script src="../static/js/script.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+    <!-- Jquery UI -->
+    <script src="https://code.jquery.com/ui/1.13.0/jquery-ui.js"></script>
+</body>
+</html>

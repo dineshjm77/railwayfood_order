@@ -1,0 +1,27 @@
+<header class="navbar">
+    <nav id="site-top-nav" class="navbar-menu navbar-fixed-top">
+        <div class="container">
+            <div class="logo">
+                <a href="{{ url_for('index') }}">
+                    <img src="{{ url_for('static', filename='images/logo.png') }}" class="img-responsive">
+                    <span class="logo-text">FACTORY.com</span>
+                </a>
+            </div>
+            <div class="menu text-right">
+                <ul>
+                    <li><a class="hvr-underline-from-center" href="{{ url_for('index') }}">Home</a></li>
+                    <li><a class="hvr-underline-from-center" href="{{ url_for('index') }}">Foods</a></li>
+                    <li><a class="hvr-underline-from-center" href="{{ url_for('order_food') }}">Orders</a></li>
+                    <li><a class="hvr-underline-from-center" href="{{ url_for('status_page') }}">Order Status</a></li> <!-- Link to Order Status page -->
+                    <li>
+                        <a href="{{ url_for('cart_page') }}" id="shopping-cart" class="shopping-cart" aria-label="Shopping Cart">
+                            <i class="fa fa-cart-arrow-down"></i>
+                            <span class="badge"></span>
+                        </a>
+                        <div id="cart-content" class="cart-content"></div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+</header>

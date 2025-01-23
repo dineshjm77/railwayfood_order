@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FOOD FACTORY</title>
+    <link rel="stylesheet" href="../static/css/style.css">
+    <link rel="stylesheet" href="../static/css/login.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/fontawesome.css') }}">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <style>
+        /* Your existing CSS code here */
+        
+.container {
+    max-width: 600px;
+    margin: auto;
+    padding: 20px;
+}
+
+.form-card {
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    margin-top: 20px;
+}
+
+h1 {
+    font-size: 24px;
+    font-weight: 600;
+    color: #007bff;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+label {
+    font-size: 14px;
+    font-weight: bold;
+    color: #555;
+    margin-bottom: 5px;
+    display: block;
+}
+
+input[type="text"], select {
+    width: 100%;
+    padding: 10px;
+    font-size: 14px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    box-sizing: border-box;
+}
+
+input[readonly] {
+    background-color: #e9ecef;
+    cursor: not-allowed;
+}
+
+input:focus, select:focus {
+    border-color: #007bff;
+    outline: none;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.3);
+}
+
+button {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    font-weight: bold;
+    color: #fff;
+    background-color: #007bff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+#paymentSection {
+    margin-top: 30px;
+}
+
+@media (max-width: 768px) {
+    h1 {
+        font-size: 20px;
+    }
+
+    button {
+        font-size: 14px;
+    }
+}
+    </style>
+</head>
+
+<body>
+    {% include 'nav.html' %}
+
+    <div class="container mt-5" style="margin-top: 100px;">
+        <div class="form-card">
+            <h1>Order Food on Train</h1>
+            <form id="foodOrderForm" method="POST" action="/order">
+                <div class="form-group">
+                    <label for="pnrNumber">PNR Number (Pre-saved)</label>
+                    <input type="text" class="form-control" id="pnrNumber" name="pnrNumber" value="PNR12345">
+                </div>
+                <div class="form-group">
+                    <label for="stationSelect">Select Station</label>
+                    <select class="form-control" id="stationSelect" name="stationSelect">
+                        <option value="">-- Choose a Station --</option>
+                        <option value="dharmapuri">Dharamapuri (Arrival: 12:00 PM)</option>
+                        <option value="salem">Salem (Arrival: 2:00 PM)</option>
+                        <option value="erode">Erode (Arrival: 3:00 PM)</option>
+                        <option value="tirupur">Tirupur (Arrival: 4:30 PM)</option>
+                        <option value="coimbatore">Coimbatore (Arrival: 6:00 PM)</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="foodCategory">Food Category</label>
+                    <select class="form-control" id="foodCategory" name="foodCategory">
+                        <option value="">-- Select Category --</option>
+                        <option value="veg">Vegetarian</option>
+                        <option value="nonveg">Non-Vegetarian</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="paymentMethod">Select Payment Method</label>
+                    <select class="form-control" id="paymentMethod" name="paymentMethod">
+                        <option value="">-- Select Payment Method --</option>
+                        <option value="upi">UPI</option>
+                        <option value="cod">Cash on Delivery</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-primary btn-block">Place Order</button>
+            </form>
+            
+        </div>
+
+        <div class="form-card mt-5" id="paymentSection" style="display: none;">
+            <h1>Payment Method</h1>
+            <div class="form-group">
+                <label for="paymentMethod">Select Payment Method</label>
+                <select class="form-control" id="paymentMethod" name="paymentMethod">
+                    <option value="upi">UPI</option>
+                    <option value="cod">Cash on Delivery</option>
+                </select>
+            </div>
+            <button type="submit" class="btn btn-primary btn-block" id="placeOrderBtn">Place Order</button>
+        </div>
+    </div>
+
+    <div class="footer">
+        <div class="container">
+            <p class="text-center">Copyright &copy; 2024 - Food Factory.com</p>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+    <script>
+        $(document).ready(function () {
+    $("#foodOrderForm").on("submit", function (event) {
+        const station = $("#stationSelect").val();
+        const category = $("#foodCategory").val();
+        const paymentMethod = $("#paymentMethod").val();
+
+        if (!station || !category || !paymentMethod) {
+            alert("Please fill out all fields.");
+            event.preventDefault();
+        }
+    });
+
+    $("#placeOrderBtn").on("click", function () {
+        const paymentMethod = $("#paymentMethod").val();
+        alert("Order placed successfully using " + paymentMethod + ".");
+    });
+});
+
+    </script>
+</body>
+
+</html>

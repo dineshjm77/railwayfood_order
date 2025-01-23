@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FOOD FACTORY</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    {% include 'nav.html' %}
+
+    <section class="food-section" style="margin-top: 220px;">
+        <h2 class="text-center">Veg Food</h2>
+        <div class="food-menu-container">
+            <div class="food-menu-box">
+                <form action="">
+                    <div class="food-menu-img">
+                        <img src="{{ url_for('static', filename='images/pizza.jpg') }}" alt="Pizza" class="img-responsive img-curve">
+                    </div>
+                    <div class="food-menu-desc">
+                        <h4>Pizza</h4>
+                        <p class="food-price">₹80.0</p>
+                        <p class="food-details">Lorem ipsum dolor sit amet consectetur adipisicing elit. Ducimus excepturi porro.</p>
+                        <input type="number" value="1" min="1">
+                        <input type="submit" class="btn-primary" value="Add To Cart">
+                    </div>
+                </form>
+            </div>
+            <!-- Repeat for other food items as needed -->
+        </div>
+    </section>
+
+    <!-- More sections for Non-Veg and Snacks -->
+
+    <div class="footer">
+        <div class="container">
+            <p class="text-center">Copyright &copy; 2024 - Food Factory.com</p>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+    <script src="https://code.jquery.com/ui/1.13.0/jquery-ui.js"></script>
+</body>
+</html>
